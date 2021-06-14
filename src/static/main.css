@@ -1,0 +1,9 @@
+.center-element {
+    margin: 0 auto !important;
+    text-align: center !important;
+}
+
+.form-col-element {
+    margin: 0 auto;
+    text-align: center;
+}
