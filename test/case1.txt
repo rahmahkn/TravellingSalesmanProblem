@@ -1,0 +1,23 @@
+COURIER
+Rahmah
+20.5
+ORIGIN
+JNE
+2.3,4.1
+DESTINATION
+Google
+0.1,-11
+Bukalapak
+-12,2.7
+Giant
+20,3
+BlueBird
+3,1.9
+Shopee
+-5.3,7
+Ruangguru
+1.2,-0.1
+Gojek
+0,-20
+TIME
+2021-06-17 08:00:00

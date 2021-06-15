@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for ('static', filename = 'main.css') }}">
+
+    <!-- Script to display added destinations -->
+    <script language="JavaScript">
+      function showDestinations() {
+        document.getElementById("addedOrigins").innerHTML +=
+                (document.getElementById("destName").value + " (" +
+                document.getElementById("destCoorX").value + ", " +
+                document.getElementById("destCoorY").value + ")")
+      }
+    </script>
+</head>
+
+<body>
+    <header class="site-header">
+    <!--
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top" style="background-color: #393e46">
+        <div class="container">
+          <a class="navbar-brand mr-4" href="/">BantuKurir</a>
+          <a class="navbar-brand mr-4" href="/history">See History</a>
+        </div>
+      </nav>
+    -->
+
+    </header>
+
+    <main role="main" class="container">
+      <div class="card p-3" style="width: 30rem; margin: 0 auto">
+
+        <form method="POST" enctype="multipart/form-data">
+          <div class="center-element">
+            <input type="file" id="fileExt" name="fileExt" accept=".txt" multiple>
+          </div>
+
+          <br></br>
+          <h3>Courier Identity</h3>
+          <div class="form-row center-element">
+            <div class="form-col-element">
+              <input type="text" id="courierName" name="courierName" placeholder="Courier Name">
+            </div>
+            <div>
+              <input type="number" id="courierPace" name="courierPace" placeholder="Courier Pace (km/h)">
+            </div>
+          </div>
+
+          <br></br>
+          <h3>Delivery Information</h3>
+          <h5>Origin</h5>
+          <div class="form-row">
+            <div class="form-group col-md-8">
+              <input type="text" id="startName" name="startName" placeholder="Origin Name">
+            </div>
+            <div class="form-group col-md-2">
+              <input type="number" step="any" id="startCoorX" name="startCoorX" placeholder="Coordinate X">
+            </div>
+            <div class="form-group col-md-2">
+              <input type="number" step="any" id="startCoorY" name="startCoorY" placeholder="Coordinate Y">
+            </div>
+          </div>
+
+          <h5>Destination</h5>
+          <div class="form-row center-element">
+            <div class="form-group col-md-6">
+              <input type="text" id="destName" name="destName" placeholder="Destination Name">
+            </div>
+            <div class="col-md-6">
+              <div class="form-group col-md-6" stype>
+                <input type="number" step="any" id="destCoorX" name="destCoorX" placeholder="Coordinate X">
+              </div>
+              <div class="form-group col-md-6">
+                <input type="number" step="any" id="destCoorY" name="destCoorY" placeholder="Coordinate Y">
+              </div>
+            </div>
+            <div class="w3-bar">
+              <input type="button" value="Add Destination" onclick="showDestinations();" class="w3-btn w3-black">
+            </div>
+            <div>
+              <span id='addedOrigins'></span>
+            </div>
+          </div>
+
+          <h5>Delivery Time</h5>
+            <input type="datetime-local" id="deliveryTime" name="deliveryTime">
+
+          <div class="w3-bar">
+            <input type="submit" value="Find Shortest Route" formaction="/route/result" class="w3-btn w3-black">
+          </div>
+        </form>
+
+      </div>
+
+    </main>
+</body>
+</html>

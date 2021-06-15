@@ -1,5 +1,4 @@
 import copy
-import numpy as np
 
 class Coordinate():
     def __init__(self, x, y, name):
