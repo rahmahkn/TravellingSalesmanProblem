@@ -1,8 +1,11 @@
 from flask import *
 from processing.tsp_solver import *
+from processing.util import *
 
 app = Flask(__name__)
 app.secret_key = "seleksiirk5"
+global coordinates
+coordinates = []
 
 @app.route('/')
 def home():
@@ -11,15 +14,18 @@ def home():
 @app.route('/route', methods=['POST', 'GET'])
 def add_route():
     courier = []
-    places = []
+    global coordinates
+
     if request.method == 'POST':
-    # Getting data from form
-        # file = request.files["fileExt"]
+        # Getting file
+        # file = request.files['fileExt']
         # file.save(file.filename)
+
         # Getting courier identity
         courierName = request.form.get('courierName')
         courierPace = request.form.get('courierPace')
         deliveryTime = request.form.get('deliveryTime')
+        print(deliveryTime)
 
         # Getting destination information
         originName = request.form.get('startName')
@@ -30,26 +36,41 @@ def add_route():
         destCoorY = request.form.get('destCoorY')
 
         # Processing inputted form
-        # Save to database
+        if (typeFloatSafety(originCoorX) and typeFloatSafety(originCoorY) and typeFloatSafety(originName)):
+            originCoor = Coordinate(float(originCoorX), float(originCoorY), originName)
+            coordinates += [originCoor]
 
-        # Get shortest route
-        session['routeString'] = 'ceritanya string'
-        session['routeGraph'] = 'ceritanya graph'
-        session['cost'] = 'ceritanya cost'
-        session['completeTime'] = 'ceritanya waktu'
+        if (typeFloatSafety(destCoorX) and typeFloatSafety(destCoorY) and typeFloatSafety(destName)):
+            destCoor = Coordinate(float(destCoorX), float(destCoorY), destName)
+            coordinates += [destCoor]
 
-        # destCoors += [Coordinate(float(destCoorX), float(destCoorY), destName)]
-        return render_template('route.html', addedOrigin=destName)
-    else:
+        if coordinates != []:
+            G = Graph(coordinates)
+            routeList = G.recursiveBnB(0, 0, [], G.distMatrix, 0)
+            route = Path(coordinates, routeList)
+            print(route.pathToString())
+
+            # Save to database
+
+            # Get shortest route
+            session['routeString'] = route.pathToString()
+            session['routeGraph'] = 'ceritanya graph'
+            session['cost'] = route.countDistance()
+            session['completeTime'] = deliveryTime
+
+        return render_template('route.html', addedDests='ceritanya yg udah diadd')
+    elif request.method == 'GET':
         return render_template('route.html')
 
 @app.route('/route/result', methods=['POST'])
 def get_route():
+    global coordinates
     routeString = session.get('routeString')
     routeGraph = session.get('routeGraph')
     cost = session.get('cost')
     completeTime = session.get('completeTime')
 
+    coordinates = []
     return render_template('result.html', string=routeString, graph=routeGraph, cost=cost, time=completeTime)
 
 @app.route('/history')
