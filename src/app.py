@@ -1,6 +1,7 @@
 from flask import *
 from processing.tsp_solver import *
 from processing.util import *
+from processing.database import *
 
 app = Flask(__name__)
 app.secret_key = "seleksiirk5"
@@ -25,7 +26,9 @@ def add_route():
         courierName = request.form.get('courierName')
         courierPace = request.form.get('courierPace')
         deliveryTime = request.form.get('deliveryTime')
-        print(deliveryTime)
+        # print(deliveryTime)
+        session['courierName'] = courierName
+        session['courierPace'] = courierPace
 
         # Getting destination information
         originName = request.form.get('startName')
@@ -48,28 +51,36 @@ def add_route():
             G = Graph(coordinates)
             routeList = G.recursiveBnB(0, 0, [], G.distMatrix, 0)
             route = Path(coordinates, routeList)
-            print(route.pathToString())
-
-            # Save to database
+            # print(route.pathToString())
 
             # Get shortest route
-            session['routeString'] = route.pathToString()
             session['routeGraph'] = 'ceritanya graph'
+            session['routeString'] = route.pathToString()
+            session['deliveryTime'] = deliveryTime
+            session['completeTime'] = calculateEndTime(deliveryTime, route.countDistance()/courierPace)
             session['cost'] = route.countDistance()
-            session['completeTime'] = deliveryTime
-
+            
         return render_template('route.html', addedDests='ceritanya yg udah diadd')
+
     elif request.method == 'GET':
         return render_template('route.html')
 
 @app.route('/route/result', methods=['POST'])
 def get_route():
     global coordinates
-    routeString = session.get('routeString')
-    routeGraph = session.get('routeGraph')
-    cost = session.get('cost')
-    completeTime = session.get('completeTime')
 
+    courierName = session.get('courierName')
+    courierPace = session.get('courierPace')
+    routeGraph = session.get('routeGraph')
+    routeString = session.get('routeString')
+    deliveryTime = session.get('deliveryTime').strftime("%Y-%m-%d, %H:%M:%S")
+    completeTime = session.get('completeTime').strftime("%Y-%m-%d, %H:%M:%S")
+    cost = session.get('cost')
+    duration = cost/courierPace
+
+    # Saving to database
+    insertRecord(courierName, deliveryTime, routeString, duration, completeTime, cost)
+    
     coordinates = []
     return render_template('result.html', string=routeString, graph=routeGraph, cost=cost, time=completeTime)
 
