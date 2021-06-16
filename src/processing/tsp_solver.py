@@ -91,7 +91,7 @@ class Graph():
 
     def recursiveBnB(self, start, rootNode, route, matrix, cost):
         if (len(route) == self.nbVertex):
-            return route + [start]# Route contains index that represent coordinate
+            return route + [start] # Route contains index that represent coordinate
         else:
             # Finding bound value for root node if there's only root node
             if (route == []):

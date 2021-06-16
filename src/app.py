@@ -51,7 +51,8 @@ def add_route():
             G = Graph(coordinates)
             routeList = G.recursiveBnB(0, 0, [], G.distMatrix, 0)
             route = Path(coordinates, routeList)
-            # print(route.pathToString())
+
+            # Saving
 
             # Get shortest route
             session['routeGraph'] = 'ceritanya graph'
