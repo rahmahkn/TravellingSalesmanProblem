@@ -1,5 +1,4 @@
 import datetime
-import pandas as pd
 import matplotlib.pyplot as plt
 
 # Function to check if a variable can be converted to float
@@ -26,4 +25,4 @@ def saveVisualizations(listOfXY):
 # Function to get image with active coordinates
 # def getActiveCoordiantes(listOfActiveCoordinate):
 
-saveVisualizations([[1,2],[7,5],[3,4],[1,2]])
+# saveVisualizations([[1,2],[7,5],[3,4],[1,2]])

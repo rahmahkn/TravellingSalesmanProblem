@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{{ url_for ('static', filename = 'main.css') }}">
 
-    <!-- Script to display added destinations -->
+    <!-- Script to display added destinations
     <script language="JavaScript">
       function showDestinations() {
         document.getElementById("addedOrigins").innerHTML +=
@@ -17,15 +17,7 @@
                 document.getElementById("destCoorX").value + ", " +
                 document.getElementById("destCoorY").value + ")")
       }
-
-      function addDestination() {
-        document.getElementById("addedDestinations").innerHTML +=
-                [document.getElementById("destName").value,
-                document.getElementById("destCoorX").value,
-                document.getElementById("destCoorY").value]
-            
-      }
-    </script>
+    </script> -->
 </head>
 
 <body>
@@ -44,13 +36,12 @@
     <main role="main" class="container">
       <div class="card p-3" style="width: 30rem; margin: 0 auto">
 
-        <form id="main-form" method="POST" enctype="multipart/form-data"></form>
-        <form id="dest-form" method="POST"></form>
-
+        <form id="main-form" method="POST"></form>
+<!--
           <div class="center-element">
             <input type="file" id="fileExt" name="fileExt" accept=".txt" multiple form="main-form" />
           </div>
-
+-->
           <br></br>
           <h3>Courier Identity</h3>
           <div class="form-row center-element">
@@ -67,34 +58,13 @@
           <h5>Origin</h5>
           <div class="form-row">
             <div class="form-group col-md-8">
-              <input type="text" id="startName" name="startName" placeholder="Origin Name" form="dest-form" />
+              <input type="text" id="startName" name="startName" placeholder="Origin Name" form="main-form" />
             </div>
             <div class="form-group col-md-2">
-              <input type="number" step="any" id="startCoorX" name="startCoorX" placeholder="Coordinate X" form="dest-form" />
+              <input type="number" step="any" id="startCoorX" name="startCoorX" placeholder="Coordinate X" form="main-form" />
             </div>
             <div class="form-group col-md-2">
-              <input type="number" step="any" id="startCoorY" name="startCoorY" placeholder="Coordinate Y" form="dest-form" />
-            </div>
-          </div>
-
-          <h5>Destination</h5>
-          <div class="form-row center-element">
-            <div class="form-group col-md-6">
-              <input type="text" id="destName" name="destName" placeholder="Destination Name" form="dest-form" />
-            </div>
-            <div class="col-md-6">
-              <div class="form-group col-md-6" stype>
-                <input type="number" step="any" id="destCoorX" name="destCoorX" placeholder="Coordinate X" form="dest-form" />
-              </div>
-              <div class="form-group col-md-6">
-                <input type="number" step="any" id="destCoorY" name="destCoorY" placeholder="Coordinate Y" form="dest-form" />
-              </div>
-            </div>
-            <div class="w3-bar">
-              <input type="submit" value="Add Destination" formaction="/route" onclick="showDestinations();" class="w3-btn w3-black" form="dest-form" />
-            </div>
-            <div>
-              {{ addedDests | safe }}
+              <input type="number" step="any" id="startCoorY" name="startCoorY" placeholder="Coordinate Y" form="main-form" />
             </div>
           </div>
 
@@ -102,12 +72,10 @@
             <input type="datetime-local" id="deliveryTime" name="deliveryTime" form="main-form" />
 
           <div class="w3-bar">
-            <input type="submit" value="Find Shortest Route" formaction="/route/result" class="w3-btn w3-black" form="main-form" />
+            <input type="submit" value="Add Identity" formaction="/route/identity" class="w3-btn w3-black" form="main-form" />
+            <input type="submit" value="Add Destinations" formaction="/route/destination" class="w3-btn w3-black" form="main-form" />
           </div>
-        
-
       </div>
-
     </main>
 </body>
 </html>

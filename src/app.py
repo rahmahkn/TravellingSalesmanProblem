@@ -5,85 +5,78 @@ from processing.database import *
 
 app = Flask(__name__)
 app.secret_key = "seleksiirk5"
-global coordinates
-coordinates = []
+
+class FormData():
+    courierName = None
+    courierPace = None
+    deliveryTime = None
+    coordinates = []
+
+data = FormData()
 
 @app.route('/')
 def home():
     return render_template('index.html')
 
-@app.route('/route', methods=['POST', 'GET'])
-def add_route():
-    courier = []
-    global coordinates
-
+@app.route('/route/identity', methods=['POST', 'GET'])
+def add_identity():
     if request.method == 'POST':
-        # Getting file
-        # file = request.files['fileExt']
-        # file.save(file.filename)
-
         # Getting courier identity
-        courierName = request.form.get('courierName')
-        courierPace = request.form.get('courierPace')
-        deliveryTime = request.form.get('deliveryTime')
-        # print(deliveryTime)
-        session['courierName'] = courierName
-        session['courierPace'] = courierPace
+        data.courierName = request.form.get('courierName')
+        data.courierPace = request.form.get('courierPace')
+        data.deliveryTime = request.form.get('deliveryTime')
 
-        # Getting destination information
+        # Getting origin information
         originName = request.form.get('startName')
         originCoorX = request.form.get('startCoorX')
         originCoorY = request.form.get('startCoorY')
+
+        # Making coordinate element
+        if (originName != None) and (originCoorX != None) and (originCoorY != None):
+            coor = Coordinate(float(originCoorX), float(originCoorY), originName)
+            print(coor.name)
+            data.coordinates += [coor]
+            
+        return render_template('form_identity.html')
+
+    elif request.method == 'GET':
+        return render_template('form_identity.html')
+
+@app.route('/route/destination', methods=['POST', 'GET'])
+def add_route():
+    if request.method == 'POST':
+        # Getting destination information
         destName = request.form.get('destName')
         destCoorX = request.form.get('destCoorX')
         destCoorY = request.form.get('destCoorY')
 
-        # Processing inputted form
-        if (typeFloatSafety(originCoorX) and typeFloatSafety(originCoorY) and typeFloatSafety(originName)):
-            originCoor = Coordinate(float(originCoorX), float(originCoorY), originName)
-            coordinates += [originCoor]
-
-        if (typeFloatSafety(destCoorX) and typeFloatSafety(destCoorY) and typeFloatSafety(destName)):
-            destCoor = Coordinate(float(destCoorX), float(destCoorY), destName)
-            coordinates += [destCoor]
-
-        if coordinates != []:
-            G = Graph(coordinates)
-            routeList = G.recursiveBnB(0, 0, [], G.distMatrix, 0)
-            route = Path(coordinates, routeList)
-
-            # Saving
-
-            # Get shortest route
-            session['routeGraph'] = 'ceritanya graph'
-            session['routeString'] = route.pathToString()
-            session['deliveryTime'] = deliveryTime
-            session['completeTime'] = calculateEndTime(deliveryTime, route.countDistance()/courierPace)
-            session['cost'] = route.countDistance()
+        # Making coordinate element
+        if (destName != None) and (destCoorX != None) and (destCoorY != None):
+            coor = Coordinate(float(destCoorX), float(destCoorY), destName)
+            print(coor.name)
+            data.coordinates += [coor]
             
-        return render_template('route.html', addedDests='ceritanya yg udah diadd')
+        return render_template('form_destination.html')
 
     elif request.method == 'GET':
-        return render_template('route.html')
+        return render_template('form_destination.html')
 
 @app.route('/route/result', methods=['POST'])
 def get_route():
-    global coordinates
-
-    courierName = session.get('courierName')
-    courierPace = session.get('courierPace')
-    routeGraph = session.get('routeGraph')
-    routeString = session.get('routeString')
-    deliveryTime = session.get('deliveryTime').strftime("%Y-%m-%d, %H:%M:%S")
-    completeTime = session.get('completeTime').strftime("%Y-%m-%d, %H:%M:%S")
-    cost = session.get('cost')
-    duration = cost/courierPace
+    # Getting shortest path
+    G = Graph(data.coordinates)
+    P = Path(data.coordinates, G.recursiveBnB(0,0,[],G.distMatrix,0))
+    routeString = P.pathToString()
+    distance = P.countDistance()
+    duration = distance / float(data.courierPace) # in hour
+    completeTime = calculateEndTime(data.deliveryTime, duration)
 
     # Saving to database
-    insertRecord(courierName, deliveryTime, routeString, duration, completeTime, cost)
+    insertRecord(data.courierName, data.deliveryTime, routeString, duration, completeTime, distance)
     
-    coordinates = []
-    return render_template('result.html', string=routeString, graph=routeGraph, cost=cost, time=completeTime)
+    # Resetting coordinates to empty list
+    data.coordinates = []
+    return render_template('result.html') #, string=routeString, graph=routeGraph, cost=cost, time=completeTime
 
 @app.route('/history')
 def history():
