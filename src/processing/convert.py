@@ -1,23 +1,25 @@
-import tsp_solver
+import os, sys
+from tsp_solver import Coordinate
 
 # Convert external file to Branch and Bound elements
 def txtToList(txtFile):
     courierIdentity = [] # Will be filled with courier's name, pace, and delivery time
     places = [] # List of coordinates that will be visited
-    file = open(txtFile, "r")
+    file = open(os.path.join(sys.path[0], "case1.txt"), 'r')
+    lines = file.readlines()
 
-    for i in range (len(file)):
-        if file[i] == "COURIER":
-            courierIdentity += [file[i+1]]
-            courierIdentity += [file[i+2]]
-            courierIdentity += [file[i+3]]
-        elif file[i] == "ORIGIN":
-            coor = Coordinate(float(file[i+2], float(file[i+3], file[i+1])))
+    for i in range (len(lines)):
+        if lines[i] == "COURIER\n":
+            courierIdentity += [lines[i+1].rstrip("\n")] # Courier name
+            courierIdentity += [float(lines[i+2].rstrip("\n"))] # Courier pace
+            courierIdentity += [lines[i+3].rstrip("\n")] # Delivery time
+        elif lines[i] == "ORIGIN\n":
+            coor = [Coordinate(float(lines[i+2].rstrip("\n")), float(lines[i+3].rstrip("\n")), lines[i+1].rstrip("\n"))]
             places += [coor]
-        elif file[i] == "DESTINATION":
+        elif lines[i] == "DESTINATION\n":
             j = i+1
-            while (j < len(file)-1):
-                coor = Coordinate(float(file[j+1], float(file[j+2], file[j])))
+            while (j < len(lines)-1):
+                coor = [Coordinate(float(lines[j+1].rstrip("\n")), float(lines[j+2].rstrip("\n")), lines[j].rstrip("\n"))]
                 places += coor
                 j += 3
             break;
@@ -25,7 +27,7 @@ def txtToList(txtFile):
     print(courierIdentity)
     print(places)
 
-txtToList(r"case1.txt")
+txtToList('case1.txt')
 
 # Convert list to 
 
