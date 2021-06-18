@@ -30,7 +30,7 @@ class Path():
             result += self.coordinates[self.index[i]].name
 
             if (i != len(self.index)-1):
-                result += ("→")
+                result += ("->")
 
         return result
 

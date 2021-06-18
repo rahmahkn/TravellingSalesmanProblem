@@ -13,14 +13,14 @@ def calculateEndTime(startTime, durationHour):
 def indexToXY(indexList, coordinateList):
     result = []
     for idx in indexList:
-        result += [coordinateList[idx].x, coordinateList[idx].y]
+        result += [[coordinateList[idx].x, coordinateList[idx].y]]
     return result
 
 # Function to save images that visualize the route
 def saveVisualizations(listOfXY):
     for i in range (len(listOfXY)-1):
          plt.plot([listOfXY[i][0], listOfXY[i+1][0]], [listOfXY[i][1], listOfXY[i+1][1]], marker='o')
-    plt.savefig('data/img/pic.png')
+    plt.savefig('graph1.png')
 
 # Function to get image with active coordinates
 # def getActiveCoordiantes(listOfActiveCoordinate):

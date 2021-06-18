@@ -26,14 +26,13 @@
 
     <main role="main" class="container">
         <p>{{ string }}</p>
-        <p>{{ graph }}</p>
-        <p>{{ cost }}</p>
+        <p>{{ distance }}</p>
         <p>{{ time }}</p>
-        <img src="../../data/img/pic.png">
+        <img src={{ graph }}>
 
         <form>
         <div class="w3-bar">
-            <input type="submit" value="Back" formaction="/route" class="w3-btn w3-black">
+            <input type="submit" value="Back" formaction="/" class="w3-btn w3-black">
         </div>
         </form>
     </main>
