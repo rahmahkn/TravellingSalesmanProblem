@@ -1,15 +1,5 @@
 import copy
 
-class Coordinate():
-    def __init__(self, x, y, name):
-        self.x = x
-        self.y = y
-        self.name = name
-    
-    # Function to count Euclidean Distance between 2 coordinates
-    def eucDistance(self, otherCoor):
-        return ((otherCoor.x-self.x)**2 + (otherCoor.y-self.y)**2)** 0.5
-
 class Graph():
     def __init__(self, coordinates):
         self.coordinates = coordinates
@@ -74,7 +64,6 @@ class Graph():
                 rootValue = (self.reduceMatrix(matrix, -1, -1, start))[1]
                 route += [rootNode]
                 cost = copy.deepcopy(rootValue)
-                print(cost)
             
             # Initializing array to contain child nodes
             childNodesMatrix = []

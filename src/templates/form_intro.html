@@ -25,19 +25,23 @@
     </header>
 
     <main role="main" class="container">
-      <form method="POST" enctype="multipart/form-data">
-        <div class="center-element">
-          <input type="file" id="fileExt" name="fileExt" accept=".txt" multiple/>
-        </div>
-        <div class="w3-show-inline-block d-flex justify-content-center">
-          <div class="w3-bar">
-            <input type="submit" value="Add Another Route" formaction="/route" class="w3-btn w3-black">
+      <div class="align-middle align-items-center justify-content-center my-auto">
+        <br><br><br>
+        <form method="POST" enctype="multipart/form-data" action="/route">
+          <h1>Upload Datas</h1>
+          <div class="card p-3" style="width: 30rem; margin: 0 auto">
+            <div class="center-element">
+              <input type="file" id="fileExt" name="fileExt" accept=".txt" multiple/>
+            </div>
           </div>
-        </div>
-      </form>
-        <div>
-          <img src={{ graph }}>
-        </div>
+          <br>
+          <div class="w3-show-inline-block d-flex justify-content-center">
+            <div class="w3-bar">
+                <input type="submit" value="Input More Route">
+            </div>
+          </div>
+        </form>
+      </div>
     </main>
 </body>
 </html>

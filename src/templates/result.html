@@ -25,13 +25,32 @@
     </header>
 
     <main role="main" class="container">
+      
         {% for result in resultList %}
-          {% for r in r %}
-            <p>r</p>
-            <img src={{ r }}>
+        <!--
+          {% for r in result %}
+            <p>{{ r }}</p>
+            <img src={{ url_for('static', filename='graphs/' + r) }}>
           {% endfor %}
-          <br></br>
+        -->
+          <p><b>Shortest Route</b></p>
+          <p> {{ result[0] }} </p>
+          <img src={{ url_for('static', filename='graphs/' + result[3]) }}>
+          <p><b>Distance</b></p>
+          <p> {{ result[1] + 'km'}} </p>
+          <p><b>Estimated Complete Time</b></p>
+          <p> {{ result[2] }} </p>
+          <br>
         {% endfor %}
+      
+      <!--
+        <img src={{ file2 }} />
+        <img src={{ file3 }} />
+
+        {% for graph in graph_files %}
+          <img src={{ url_for('static', filename='graphs/' + graph) }} />
+        {% endfor %}
+      -->
 
         <form>
         <div class="w3-bar">

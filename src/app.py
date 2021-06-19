@@ -9,7 +9,7 @@ import datetime
 import os
 
 GRAPH_FOLDER = os.path.join('static', 'graphs')
-TXT_FOLDER = os.path.join('upload')
+TXT_FOLDER = os.path.join('upload', '')
 
 app = Flask(__name__)
 app.secret_key = "seleksiirk5"
@@ -26,19 +26,25 @@ data = FormData()
 
 @app.route('/')
 def home():
-    full_filename = os.path.join(app.config['GRAPH_FOLDER'], 'graph1.png')
-    return render_template('index.html', graph=full_filename)
+    # Resetting coordinates to empty list and deletting processed files
+    data.coordinates = []
+    data.allGraphs = []
+    for file in os.listdir(TXT_FOLDER):
+        os.remove(os.path.join(TXT_FOLDER, file))
+    for file in os.listdir(GRAPH_FOLDER):
+        os.remove(os.path.join(GRAPH_FOLDER, file))
+
+    return render_template('index.html')
 
 @app.route('/route', methods=['POST', 'GET'])
 def intro_route():
     if request.method == 'POST':
         fileExt = request.files.getlist('fileExt')
-        if fileExt:
+        if fileExt != []:
             for file in fileExt:
                 file.save('upload/' + file.filename)
                 data.allGraphs += [txtToList('upload/' + file.filename)]
-                
-        return render_template('form_intro.html')
+        return redirect(url_for('add_identity'))
     else:
         return render_template('form_intro.html')
 
@@ -64,10 +70,9 @@ def add_identity():
         # Making coordinate element
         if (originName != None) and (originCoorX != None) and (originCoorY != None):
             coor = Coordinate(float(originCoorX), float(originCoorY), originName)
-            print(coor.name)
             data.coordinates += [coor]
             
-        return render_template('form_identity.html')
+        return redirect(url_for('add_route'))
 
     elif request.method == 'GET':
         return render_template('form_identity.html')
@@ -83,7 +88,6 @@ def add_route():
         # Making coordinate element
         if (destName != None) and (destCoorX != None) and (destCoorY != None):
             coor = Coordinate(float(destCoorX), float(destCoorY), destName)
-            print(coor.name)
             data.coordinates += [coor]
             
         return render_template('form_destination.html')
@@ -91,7 +95,7 @@ def add_route():
     elif request.method == 'GET':
         return render_template('form_destination.html')
 
-@app.route('/route/result', methods=['POST'])
+@app.route('/route/result', methods=['POST', 'GET'])
 def get_route():
     # Initializing result that will be passed to html
     result = []
@@ -102,13 +106,11 @@ def get_route():
     # Getting all shortest paths
     count = 1
     for graph in data.allGraphs:
-        print(graph)
         G = Graph(graph[1])
         shortestPathIndex = G.recursiveBnB(0,0,[],G.distMatrix,0)
 
         P = Path(graph[1], shortestPathIndex)
         routeString = P.pathToString()
-        print(routeString)
         distance = round(P.countDistance(), 2)
         duration = distance / float(graph[0][1]) # in hour
 
@@ -121,23 +123,14 @@ def get_route():
 
         # Make graph visualizations
         saveVisualizations(indexToXY(shortestPathIndex, graph[1]), count)
-        full_filename = os.path.join(app.config['GRAPH_FOLDER'], ('graph'+str(count)+'.png'))
+        filename = 'graph' + str(count) + '.png'
         count += 1
 
         # Saving to database
         insertRecord(graph[0][0], deliveryTime, routeString, duration, completeTime, distance)
 
         # Add to result that will be passed to html
-        result += [[routeString, distance, completeTime, full_filename]]
-    
-    # Resetting coordinates to empty list and deletting processed files
-    data.coordinates = []
-    data.allGraphs = []
-    print(result)
-    # for file in os.listdir(TXT_FOLDER):
-    #     os.remove(os.path.join(TXT_FOLDER, file))
-    # for file in os.listdir(GRAPH_FOLDER):
-    #     os.remove(os.path.join(GRAPH_FOLDER, file))
+        result += [[str(routeString), str(distance), str(completeTime), str(filename)]]
 
     return render_template('result.html', resultList=result)
 
