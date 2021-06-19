@@ -17,10 +17,11 @@ def indexToXY(indexList, coordinateList):
     return result
 
 # Function to save images that visualize the route
-def saveVisualizations(listOfXY):
+def saveVisualizations(listOfXY, numbGraph):
     for i in range (len(listOfXY)-1):
          plt.plot([listOfXY[i][0], listOfXY[i+1][0]], [listOfXY[i][1], listOfXY[i+1][1]], marker='o')
-    plt.savefig('graph1.png')
+    plt.savefig('static/graphs/graph' + str(numbGraph) + '.png')
+    plt.cla()
 
 # Function to get image with active coordinates
 # def getActiveCoordiantes(listOfActiveCoordinate):

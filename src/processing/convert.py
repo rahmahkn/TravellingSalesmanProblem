@@ -1,21 +1,24 @@
 import os, sys
-from tsp_solver import Coordinate
+import datetime
+from processing.element.Coordinate import Coordinate
+from processing.tsp_solver import Graph
 
 # Convert external file to Branch and Bound elements
 def txtToList(txtFile):
     courierIdentity = [] # Will be filled with courier's name, pace, and delivery time
     places = [] # List of coordinates that will be visited
-    file = open(os.path.join(sys.path[0], "case1.txt"), 'r')
+    file = open(os.path.join(sys.path[0], txtFile), 'r')
     lines = file.readlines()
 
     for i in range (len(lines)):
         if lines[i] == "COURIER\n":
             courierIdentity += [lines[i+1].rstrip("\n")] # Courier name
             courierIdentity += [float(lines[i+2].rstrip("\n"))] # Courier pace
-            courierIdentity += [lines[i+3].rstrip("\n")] # Delivery time
+            deliveryTime = datetime.datetime.strptime(lines[i+3].rstrip("\n"), "%Y/%m/%d %H:%M:%S")
+            courierIdentity += [deliveryTime] # Delivery time
         elif lines[i] == "ORIGIN\n":
             coor = [Coordinate(float(lines[i+2].rstrip("\n")), float(lines[i+3].rstrip("\n")), lines[i+1].rstrip("\n"))]
-            places += [coor]
+            places += coor
         elif lines[i] == "DESTINATION\n":
             j = i+1
             while (j < len(lines)-1):
@@ -24,10 +27,9 @@ def txtToList(txtFile):
                 j += 3
             break;
 
-    print(courierIdentity)
-    print(places)
+    return [courierIdentity, places]
 
-txtToList('case1.txt')
+# txtToList('../../data/upload/case1.txt')
 
 # Convert list to 
 

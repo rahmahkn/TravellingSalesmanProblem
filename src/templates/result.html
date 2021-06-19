@@ -25,10 +25,13 @@
     </header>
 
     <main role="main" class="container">
-        <p>{{ string }}</p>
-        <p>{{ distance }}</p>
-        <p>{{ time }}</p>
-        <img src={{ graph }}>
+        {% for result in resultList %}
+          {% for r in r %}
+            <p>r</p>
+            <img src={{ r }}>
+          {% endfor %}
+          <br></br>
+        {% endfor %}
 
         <form>
         <div class="w3-bar">

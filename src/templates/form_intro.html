@@ -25,11 +25,16 @@
     </header>
 
     <main role="main" class="container">
+      <form method="POST" enctype="multipart/form-data">
+        <div class="center-element">
+          <input type="file" id="fileExt" name="fileExt" accept=".txt" multiple/>
+        </div>
         <div class="w3-show-inline-block d-flex justify-content-center">
           <div class="w3-bar">
-            <a type="submit" href="/route" class="btn btn-primary">Find Shortest Route</a>
+            <input type="submit" value="Add Another Route" formaction="/route" class="w3-btn w3-black">
           </div>
         </div>
+      </form>
         <div>
           <img src={{ graph }}>
         </div>

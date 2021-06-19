@@ -1,30 +1,46 @@
 from flask import *
+from processing.convert import txtToList
 from processing.element.Coordinate import Coordinate
 from processing.element.Path import Path
-from processing.tsp_solver import *
+from processing.tsp_solver import Graph
 from processing.util import *
 from processing.database import *
 import datetime
 import os
 
 GRAPH_FOLDER = os.path.join('static', 'graphs')
+TXT_FOLDER = os.path.join('upload')
 
 app = Flask(__name__)
 app.secret_key = "seleksiirk5"
-app.config['UPLOAD_FOLDER'] = GRAPH_FOLDER
+app.config['GRAPH_FOLDER'] = GRAPH_FOLDER
 
 class FormData():
     courierName = None
     courierPace = None
     deliveryTime = None
     coordinates = []
+    allGraphs = []
 
 data = FormData()
 
 @app.route('/')
 def home():
-    full_filename = os.path.join(app.config['UPLOAD_FOLDER'], 'graph1.png')
+    full_filename = os.path.join(app.config['GRAPH_FOLDER'], 'graph1.png')
     return render_template('index.html', graph=full_filename)
+
+@app.route('/route', methods=['POST', 'GET'])
+def intro_route():
+    if request.method == 'POST':
+        fileExt = request.files.getlist('fileExt')
+        if fileExt:
+            for file in fileExt:
+                file.save('upload/' + file.filename)
+                data.allGraphs += [txtToList('upload/' + file.filename)]
+                
+        return render_template('form_intro.html')
+    else:
+        return render_template('form_intro.html')
 
 @app.route('/route/identity', methods=['POST', 'GET'])
 def add_identity():
@@ -77,30 +93,53 @@ def add_route():
 
 @app.route('/route/result', methods=['POST'])
 def get_route():
-    # Getting shortest path
-    G = Graph(data.coordinates)
-    shortestPathIndex = G.recursiveBnB(0,0,[],G.distMatrix,0)
+    # Initializing result that will be passed to html
+    result = []
 
-    P = Path(data.coordinates, shortestPathIndex)
-    routeString = P.pathToString()
-    distance = P.countDistance()
-    duration = distance / float(data.courierPace) # in hour
+    # Adding inputted data to courierIdentity and graph
+    data.allGraphs += [[[data.courierName, data.courierPace, data.deliveryTime], data.coordinates]]
 
-    completeTime = calculateEndTime(data.deliveryTime, duration)
-    deliveryTime = data.deliveryTime.strftime("%Y/%m/%d %H:%M:%S")
-    completeTime = completeTime.strftime("%Y/%m/%d %H:%M:%S")
+    # Getting all shortest paths
+    count = 1
+    for graph in data.allGraphs:
+        print(graph)
+        G = Graph(graph[1])
+        shortestPathIndex = G.recursiveBnB(0,0,[],G.distMatrix,0)
 
-    # Make graph
-    print(indexToXY(shortestPathIndex, data.coordinates))
-    saveVisualizations(indexToXY(shortestPathIndex, data.coordinates))
-    full_filename = os.path.join(app.config['UPLOAD_FOLDER'], 'graph1.png')
+        P = Path(graph[1], shortestPathIndex)
+        routeString = P.pathToString()
+        print(routeString)
+        distance = round(P.countDistance(), 2)
+        duration = distance / float(graph[0][1]) # in hour
 
-    # Saving to database
-    insertRecord(data.courierName, deliveryTime, routeString, duration, completeTime, distance)
+        if type(graph[0][2]) != str:
+            deliveryTime = graph[0][2].strftime("%Y/%m/%d %H:%M:%S")
+        else:
+            deliveryTime = graph[0][2]
+        completeTime = calculateEndTime(graph[0][2], duration)
+        completeTime = completeTime.strftime("%Y/%m/%d %H:%M:%S")
+
+        # Make graph visualizations
+        saveVisualizations(indexToXY(shortestPathIndex, graph[1]), count)
+        full_filename = os.path.join(app.config['GRAPH_FOLDER'], ('graph'+str(count)+'.png'))
+        count += 1
+
+        # Saving to database
+        insertRecord(graph[0][0], deliveryTime, routeString, duration, completeTime, distance)
+
+        # Add to result that will be passed to html
+        result += [[routeString, distance, completeTime, full_filename]]
     
-    # Resetting coordinates to empty list
+    # Resetting coordinates to empty list and deletting processed files
     data.coordinates = []
-    return render_template('result.html', string=routeString, graph=full_filename, distance=distance, time=completeTime)
+    data.allGraphs = []
+    print(result)
+    # for file in os.listdir(TXT_FOLDER):
+    #     os.remove(os.path.join(TXT_FOLDER, file))
+    # for file in os.listdir(GRAPH_FOLDER):
+    #     os.remove(os.path.join(GRAPH_FOLDER, file))
+
+    return render_template('result.html', resultList=result)
 
 @app.route('/history')
 def history():

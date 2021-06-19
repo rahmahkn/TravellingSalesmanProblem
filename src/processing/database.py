@@ -11,7 +11,9 @@ def connection():
 
 def insertRecord(name, startTime, route, deliveryDuration, finishTime, cost):
     c, conn = connection()
-    sql = f"INSERT INTO deliveries VALUES ('{name}', '{startTime}', '{route}', {deliveryDuration}, '{finishTime}', {cost})"
+    sql = f'''INSERT INTO deliveries
+            (name, startTime, route, deliveryDuration, finishTime, cost)
+            VALUES ('{name}', '{startTime}', '{route}', {deliveryDuration}, '{finishTime}', {cost})'''
 
     c.execute(sql)
     conn.commit()
