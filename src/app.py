@@ -20,6 +20,7 @@ class FormData():
     courierPace = None
     deliveryTime = None
     coordinates = []
+    destinations = []
     allGraphs = []
 
 data = FormData()
@@ -87,10 +88,12 @@ def add_route():
 
         # Making coordinate element
         if (destName != None) and (destCoorX != None) and (destCoorY != None):
+            coorString = [destName + " (" + str(destCoorX) + ", " + str(destCoorY) + ")"]
+            data.destinations += coorString
             coor = Coordinate(float(destCoorX), float(destCoorY), destName)
             data.coordinates += [coor]
             
-        return render_template('form_destination.html')
+        return render_template('form_destination.html', destinations=data.destinations)
 
     elif request.method == 'GET':
         return render_template('form_destination.html')
@@ -130,7 +133,7 @@ def get_route():
         insertRecord(graph[0][0], deliveryTime, routeString, duration, completeTime, distance)
 
         # Add to result that will be passed to html
-        result += [[str(routeString), str(distance), str(completeTime), str(filename)]]
+        result += [[str(routeString.replace('->', '→')), str(distance), str(completeTime), str(filename)]]
 
     return render_template('result.html', resultList=result)
 

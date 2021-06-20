@@ -25,38 +25,23 @@
     </header>
 
     <main role="main" class="container">
-      
+      <h1><b>Results</b></h1>
         {% for result in resultList %}
-        <!--
-          {% for r in result %}
-            <p>{{ r }}</p>
-            <img src={{ url_for('static', filename='graphs/' + r) }}>
-          {% endfor %}
-        -->
-          <p><b>Shortest Route</b></p>
-          <p> {{ result[0] }} </p>
-          <img src={{ url_for('static', filename='graphs/' + result[3]) }}>
-          <p><b>Distance</b></p>
-          <p> {{ result[1] + 'km'}} </p>
-          <p><b>Estimated Complete Time</b></p>
-          <p> {{ result[2] }} </p>
+          <div class="card p-3" style="width: 30rem; margin: 0 auto">
+            <p><b>Shortest Route</b></p>
+            <p> {{ result[0] }} </p>
+            <img src={{ url_for('static', filename='graphs/' + result[3]) }}>
+            <p><b>Distance</b></p>
+            <p> {{ result[1] + ' km'}} </p>
+            <p><b>Estimated Complete Time</b></p>
+            <p> {{ result[2] }} </p>
+          </div>
           <br>
         {% endfor %}
       
-      <!--
-        <img src={{ file2 }} />
-        <img src={{ file3 }} />
-
-        {% for graph in graph_files %}
-          <img src={{ url_for('static', filename='graphs/' + graph) }} />
-        {% endfor %}
-      -->
-
-        <form>
-        <div class="w3-bar">
-            <input type="submit" value="Back" formaction="/" class="w3-btn w3-black">
+        <div class="w3-bar d-flex justify-content-center">
+          <a type="button" href="/" class="btn btn-primary justify-content-center" style="width: 30rem">Back Home</a>
         </div>
-        </form>
     </main>
 </body>
 </html>

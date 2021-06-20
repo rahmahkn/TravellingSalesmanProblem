@@ -39,39 +39,45 @@
         <form id="main-form" method="POST"></form>
         <div class="card p-3" style="width: 30rem; margin: 0 auto">
 
-          <h3>Courier Identity</h3>
-          <div class="form-row center-element">
-            <div class="form-col-element">
-              <input type="text" id="courierName" name="courierName" placeholder="Courier Name" form="main-form" Required/>
+          <h3><b>Courier Identity</b></h3>
+          <div class="form-row align-items-center">
+            <div class="col-7">
+              <input type="text" class="form-control" id="courierName" name="courierName" placeholder="Name" form="main-form" Required/>
             </div>
-            <div>
-              <input type="number" step="any" id="courierPace" name="courierPace" placeholder="Courier Pace (km/h)" form="main-form" Required/>
+            <div class="col-5">
+              <input type="number" class="form-control" step="any" id="courierPace" name="courierPace" placeholder="Pace (km/h)" form="main-form" Required/>
             </div>
           </div>
 
           <br>
-          <h3>Delivery Information</h3>
+          <h3><b>Delivery Information</b></h3>
           <h5>Origin</h5>
-          <div class="form-row">
-            <div class="form-group col-md-8">
-              <input type="text" id="startName" name="startName" placeholder="Origin Name" form="main-form" Required/>
+          <div class="form-row align-items-center">
+            <div class="col-7">
+              <input type="text" class="form-control" id="startName" name="startName" placeholder="Name" form="main-form" Required/>
             </div>
-            <div class="form-group col-md-2">
-              <input type="number" step="any" id="startCoorX" name="startCoorX" placeholder="Coordinate X" form="main-form" Required/>
+            <div class="col">
+              <input type="number" class="form-control" step="any" id="startCoorX" name="startCoorX" placeholder="X" form="main-form" Required/>
             </div>
-            <div class="form-group col-md-2">
-              <input type="number" step="any" id="startCoorY" name="startCoorY" placeholder="Coordinate Y" form="main-form" Required/>
+            <div class="col">
+              <input type="number" class="form-control" step="any" id="startCoorY" name="startCoorY" placeholder="Y" form="main-form" Required/>
             </div>
           </div>
 
           <h5>Delivery Time</h5>
-            <input type="date" id="deliveryDate" name="deliveryDate" form="main-form" Required/>
-            <input type="time" id="deliveryTime" name="deliveryTime" form="main-form" Required/>
+          <div class="form-row align-items-center">
+            <div class="col-7">
+              <input type="date" class="form-control" id="deliveryDate" name="deliveryDate" form="main-form" Required/>
+            </div>
+            <div class="col-5">
+              <input type="time" class="form-control" id="deliveryTime" name="deliveryTime" form="main-form" Required/>
+            </div>
+          </div>
         </div>
 
         <br>
-        <div class="w3-bar d-flex justify-content-center">
-          <input type="submit" value="Add Identity" formaction="/route/identity" class="w3-btn w3-black" form="main-form" />
+        <div class="d-flex justify-content-center">
+          <input type="submit" value="Add Identity" formaction="/route/identity" class="btn btn-primary" style="width: 30rem" form="main-form" />
         </div>
       </div>
     </main>

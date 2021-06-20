@@ -1,5 +1,5 @@
 body { 
-    background: url(bg1.png) no-repeat center center fixed; 
+    background: url(bg.png) no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -19,8 +19,14 @@ h1 {
 }
 
 .title > h1 {
+    color: white;
     font-size: 80px;
-    text-shadow: 3px 3px #23357C;
+    text-shadow: 4px 4px 7px #23357C;
+}
+
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: #23357C !important;
+    border: 0.3px solid white !important;
 }
 
 .center-element {
