@@ -14,6 +14,7 @@ TXT_FOLDER = os.path.join('upload', '')
 app = Flask(__name__)
 app.secret_key = "seleksiirk5"
 app.config['GRAPH_FOLDER'] = GRAPH_FOLDER
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 class FormData():
     courierName = None
@@ -29,6 +30,7 @@ data = FormData()
 def home():
     # Resetting coordinates to empty list and deletting processed files
     data.coordinates = []
+    data.destinations = []
     data.allGraphs = []
     for file in os.listdir(TXT_FOLDER):
         os.remove(os.path.join(TXT_FOLDER, file))
@@ -45,7 +47,7 @@ def intro_route():
             for file in fileExt:
                 file.save('upload/' + file.filename)
                 data.allGraphs += [txtToList('upload/' + file.filename)]
-        return redirect(url_for('add_identity'))
+        return render_template('form_intro.html')
     else:
         return render_template('form_intro.html')
 
@@ -104,7 +106,8 @@ def get_route():
     result = []
 
     # Adding inputted data to courierIdentity and graph
-    data.allGraphs += [[[data.courierName, data.courierPace, data.deliveryTime], data.coordinates]]
+    if (data.courierName != None) and (data.courierPace != None) and (data.deliveryTime != None):
+        data.allGraphs += [[[data.courierName, data.courierPace, data.deliveryTime], data.coordinates]]
 
     # Getting all shortest paths
     count = 1
@@ -125,21 +128,28 @@ def get_route():
         completeTime = completeTime.strftime("%Y/%m/%d %H:%M:%S")
 
         # Make graph visualizations
-        saveVisualizations(indexToXY(shortestPathIndex, graph[1]), count)
-        filename = 'graph' + str(count) + '.png'
+        saveVisualizations(indexToXY(shortestPathIndex, graph[1]), graph[1], count)
+        filename = [('graph' + str(count) + '-' + str(i) + '.png') for i in range (len(graph[1])+1)]
         count += 1
 
         # Saving to database
         insertRecord(graph[0][0], deliveryTime, routeString, duration, completeTime, distance)
 
         # Add to result that will be passed to html
-        result += [[str(routeString.replace('->', '→')), str(distance), str(completeTime), str(filename)]]
+        result += [[str(routeString.replace('->', '→')), str(distance), str(completeTime), filename]]
 
     return render_template('result.html', resultList=result)
 
 @app.route('/history')
 def history():
     return render_template('history.html')
+
+@app.after_request
+def add_header(response):
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '-1'
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True)

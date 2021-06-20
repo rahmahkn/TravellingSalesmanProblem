@@ -1,4 +1,6 @@
 import datetime
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 # Function to check if a variable can be converted to float
@@ -17,11 +19,24 @@ def indexToXY(indexList, coordinateList):
     return result
 
 # Function to save images that visualize the route
-def saveVisualizations(listOfXY, numbGraph):
-    for i in range (len(listOfXY)-1):
-         plt.plot([listOfXY[i][0], listOfXY[i+1][0]], [listOfXY[i][1], listOfXY[i+1][1]], marker='o')
-    plt.savefig('static/graphs/graph' + str(numbGraph) + '.png')
-    plt.cla()
+def saveVisualizations(listOfXY, coordinateList, numbGraph):
+    # Make x list and y list
+    xList = [listOfXY[i][0] for i in range (len(listOfXY))]
+    yList = [listOfXY[i][1] for i in range (len(listOfXY))]
+
+    for i in range (len(listOfXY)):
+        # Make points
+        plt.scatter(xList, yList)
+        for coor in coordinateList:
+            plt.annotate(coor.name, (coor.x, coor.y))
+
+        # Make lines
+        for j in range (i):
+            plt.plot([listOfXY[j][0], listOfXY[j+1][0]], [listOfXY[j][1], listOfXY[j+1][1]], marker='o')
+
+        plt.savefig('static/graphs/graph' + str(numbGraph) + '-' + str(i) + '.png')
+        plt.cla()
+        plt.close()
 
 # Function to get image with active coordinates
 # def getActiveCoordiantes(listOfActiveCoordinate):
