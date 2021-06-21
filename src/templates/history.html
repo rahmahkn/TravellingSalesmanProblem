@@ -13,19 +13,45 @@
 </head>
 <body>
     <header class="site-header">
-    <!--
-      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top" style="background-color: #393e46">
-        <div class="container">
-          <a class="navbar-brand mr-4" href="/">BantuKurir</a>
-          <a class="navbar-brand mr-4" href="/history">See History</a>
+      <nav class="navbar sticky-top navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">BantuKurir</a>
+          <a class="navbar-brand" href="/history">History</a>
         </div>
       </nav>
-    -->
-
     </header>
 
     <main role="main" class="container">
-        <p>History</p>
+        <form method="POST" action="/history">
+          <br>
+          <div class="card p-3" style="width: 30rem; margin: 0 auto">
+            <h3 style="text-align: center;"><b>Search Delivery</b></h3>
+            <div class="form-row align-items-center">
+              <div class="col-7">
+                <input type="text" class="form-control" id="searchCourier" name="searchCourier" placeholder="Courier Name"/>
+              </div>
+              <div class="col-5">
+                <input type="date" class="form-control" id="searchDate" name="searchDate"/>
+              </div>
+            </div>
+            <br>
+            <div class="w3-bar d-flex justify-content-center">
+              <input type="submit" value="Search" class="w3-btn w3-black">
+            </div>
+          </div>
+        </form>
+
+        <div class="container">
+        {% for res in searchResult %}
+          <br>
+          <div class="card p-3" style="width: 30rem; margin: 0 auto">
+            <p><b>Courier Name: </b>{{ res[1] }}</p>
+            <p><b>Shortest Route: </b>{{ res[3] }}</p>
+            <p><b>Delivery Time: </b>{{ res[2] }}</p>
+            <p><b>Estimated Complete Time: </b>{{ res[5] }}</p>
+            <p><b>Distance: </b>{{ res[6] }} km</p>
+          </div>
+        {% endfor %}
     </main>
 </body>
 </html>

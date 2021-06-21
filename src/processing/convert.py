@@ -28,12 +28,3 @@ def txtToList(txtFile):
             break;
 
     return [courierIdentity, places]
-
-# txtToList('../../data/upload/case1.txt')
-
-# Convert list to 
-
-# Convert added origins to html style
-
-# Convert list to html table
-

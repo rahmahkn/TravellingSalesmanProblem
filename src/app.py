@@ -140,9 +140,17 @@ def get_route():
 
     return render_template('result.html', resultList=result)
 
-@app.route('/history')
+@app.route('/history', methods=['POST', 'GET'])
 def history():
-    return render_template('history.html')
+    if request.method == 'POST':
+        searchCourier = request.form.get("searchCourier")
+        searchDate = request.form.get("searchDate")
+
+        result = searchRecord(searchCourier, searchDate)
+
+        return render_template('history.html', searchResult=result)
+    else:
+        return render_template('history.html')
 
 @app.after_request
 def add_header(response):

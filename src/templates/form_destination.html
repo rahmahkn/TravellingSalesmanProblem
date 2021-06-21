@@ -8,29 +8,16 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{{ url_for ('static', filename = 'main.css') }}">
-
-    <!-- Script to display added destinations
-    <script language="JavaScript">
-      function showDestinations() {
-        document.getElementById("addedOrigins").innerHTML +=
-                (document.getElementById("destName").value + " (" +
-                document.getElementById("destCoorX").value + ", " +
-                document.getElementById("destCoorY").value + ")")
-      }
-    </script> -->
 </head>
 
 <body>
     <header class="site-header">
-    <!--
-      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top" style="background-color: #393e46">
-        <div class="container">
-          <a class="navbar-brand mr-4" href="/">BantuKurir</a>
-          <a class="navbar-brand mr-4" href="/history">See History</a>
+      <nav class="navbar sticky-top navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">BantuKurir</a>
+          <a class="navbar-brand" href="/history">History</a>
         </div>
       </nav>
-    -->
-
     </header>
 
     <main role="main" class="container">

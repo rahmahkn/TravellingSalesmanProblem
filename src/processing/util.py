@@ -3,10 +3,6 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-# Function to check if a variable can be converted to float
-def typeFloatSafety(element):
-    return ((type(element) is str) or (type(element) is int)) and (element != '')
-
 # Function to calculate end time from start time with a duration
 def calculateEndTime(startTime, durationHour):
     return startTime + datetime.timedelta(seconds=3600*durationHour)
@@ -37,8 +33,3 @@ def saveVisualizations(listOfXY, coordinateList, numbGraph):
         plt.savefig('static/graphs/graph' + str(numbGraph) + '-' + str(i) + '.png')
         plt.cla()
         plt.close()
-
-# Function to get image with active coordinates
-# def getActiveCoordiantes(listOfActiveCoordinate):
-
-# saveVisualizations([[1,2],[7,5],[3,4],[1,2]])

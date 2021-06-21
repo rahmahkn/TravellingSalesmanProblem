@@ -31,7 +31,9 @@ def searchRecord(courierName, date):
 
     c.execute(sql)
     result = list(c.fetchall())
+    
+    for i in range (len(result)):
+        result[i] = list(result[i])
+        result[i][3] = result[i][3].replace('->', '→')
 
-# Driver
-# insertRecord('Syifa','2021-06-16 12:05:12','Rdalf->bkfa',43.3,'2021-06-17 10:40:12',565.1)
-# searchRecord('','2021-06-16')
+    return result

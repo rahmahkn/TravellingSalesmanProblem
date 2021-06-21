@@ -82,24 +82,3 @@ class Graph():
             matrix = childNodesMatrix[childNodesCost.index(min(childNodesCost))]
 
             return self.recursiveBnB(start, promisingNode, route, matrix, min(childNodesCost))
-
-# Driver
-# C1 = Coordinate(3.5,-0.2,"Google")
-# C2 = Coordinate(0,2.3,"Bukalapak")
-# C3 = Coordinate(7.9,10,"Gojek")
-# C4 = Coordinate(8.1,22,"Tokopedia")
-# C5 = Coordinate(0.1,-11,"Amazon")
-
-# distances = [C1, C2, C3, C4, C5]
-# G = Graph(distances)
-# # G.distMatrix = [[float('inf'), 10, 17, 0 ,1],
-# #                 [12, float('inf'), 11, 2, 0],
-# #                 [0, 3, float('inf'), 0, 2],
-# #                 [15, 3, 12, float('inf'), 0],
-# #                 [11, 0, 0, 12, float('inf')]]
-
-# I = G.recursiveBnB(0, 0, [], G.distMatrix, 0)
-# print(I)
-# P = Path(distances, I)
-# print(P.countDistance())
-# print(P.pathToString())
